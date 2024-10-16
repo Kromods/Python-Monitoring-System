@@ -44,6 +44,8 @@ def monitor_system():
         #Wartezeit von 10 Sekunden
         time.sleep(10)
 
-#Überachung starten
+#Warnsystem hier einfügen
+
+#Überwachung starten
 if __name__ == "__main__":
     monitor_system()
