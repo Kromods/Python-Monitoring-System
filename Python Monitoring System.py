@@ -41,15 +41,22 @@ def monitor_network():
 
 #Hauptüberwachungsfunktion mit eingabe in eine Datei
 def monitor_system():
+    #Anzahl der Überwachungszyklen
+    max_interations = 5 #nur 5 Durchläufe, dann stoppen 
+    current_interation = 0 
+
     with open("monitoring_results.txt", "a") as file:
-      while True:
+      while current_interation < max_interations:
         file.write("_" * 40+"\n")
         file.write(time.strftime("%Y-%m-%d %H:%M:%S") + "\n" ) #aktuelle Zeit wird hinzugefügt
-        file.write(monitor_cpu())
+        file.write(monitor_cpu()[0])
         file.write(monitor_memory())
         file.write(monitor_disk())
         file.write(monitor_network())
         file.write("_" * 40 + "\n\n")
+
+        #iterationszähler erhöhen
+        current_interation +=1
 
         #Wartezeit von 10 Sekunden
         time.sleep(15)
