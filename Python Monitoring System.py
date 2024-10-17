@@ -4,6 +4,7 @@ import time
 #Schwellenwert definieren
 CRITICAL_CPU_THRESHOLD = 50.0 
 CRITICAL_MEMORY_THRESHOLD = 80.0
+CRITICAL_DISK_THRESHOLD = 85.0
 
 #Funktion zum Überwachen der CPU-Auslastung
 def monitor_cpu():
@@ -39,20 +40,29 @@ def monitor_memory():
     if memory.percent >=CRITICAL_MEMORY_THRESHOLD:
         warning_message = f"!!! WARNUNG: RAM-Auslastung hat{CRITICAL_MEMORY_THRESHOLD}% überschritten ({memory.percent}%) !!!"
         memory_info.append(warning_message)
-        print(warning_message) #Gib die Warnung in der Konsole aus 
+        print(warning_message) #Gibt die Warnung in der Konsole aus 
         return "\n".join(memory_info), warning_message #Rückgabe der RAM INFO und der Warnung 
     
-    return "\n".join(memory_info), None #Keine Warung, nur Memory Daten zurückgeben
+    return "\n".join(memory_info), None #Keine Warnung, nur Memory Daten zurückgeben
 
 #Funktion zum Überachen der Festplatte
 def monitor_disk():
     disk = psutil.disk_usage('/')
     disk_info = []
+
     disk_info.append("Festplatteninformation:")
     disk_info.append(f"  Gesamter Speicherplatz: {disk.total / (1024**3):.2f} GB")
     disk_info.append(f"  Verfügbarer Speicherplatz: {disk.free / (1024**3):.2f} GB")
     disk_info.append(f"  Speicherplatz-Auslastung: {disk.percent}%\n")
-    return "\n".join(disk_info)
+
+    #Warnung bei wenig Restspeicher der Festplatte
+    if disk.percent >=CRITICAL_DISK_THRESHOLD:
+        warning_message = f"!!! WARNUNG: DISK-Speicher hat {CRITICAL_DISK_THRESHOLD}% erreicht ({disk.percent}%) !!!"
+        disk_info.append(warning_message)
+        print(warning_message) #Gibt die Warnung in der Konsole aus 
+        return "\n".join(disk_info), warning_message # Rückgabe des Speicherstandes und der Warnung
+    
+    return "\n".join(disk_info), None #Keine Warnung, nur Memory Daten zurückgeben
 
 #Funktion zum Überachen des Netzwerks 
 def monitor_network():
@@ -90,8 +100,15 @@ def monitor_system():
         if memory_warning:
             file.write(memory_warning + "\n")
         
-        #Festplatten sowie Netzwerküberwachung
-        file.write(monitor_disk())
+        #überwache Festplatte und speicher evtl.Warnung
+        disk_data, disk_warning = monitor_disk
+        file.write(disk_data)
+
+        #DISK Warnung in die Datei schreiben, falls vorhanden
+        if disk_warning:
+            file.write(disk_warning + "\n")
+
+        #Überwachung des Netzwerks
         file.write(monitor_network())
         file.write("_" * 40 + "\n\n")
 
