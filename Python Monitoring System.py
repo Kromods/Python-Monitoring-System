@@ -1,8 +1,9 @@
 import psutil
 import time
 
-#Schwellenwert für CPU-Auslastung (hier 50 Prozent)
+#Schwellenwert definieren
 CRITICAL_CPU_THRESHOLD = 50.0 
+CRITICAL_MEMORY_THRESHOLD = 80.0
 
 #Funktion zum Überwachen der CPU-Auslastung
 def monitor_cpu():
@@ -23,15 +24,25 @@ def monitor_cpu():
     
     return "\n".join(cpu_info), None #keine Warunung, nur CPU Daten zurückgeben
 
+
 #Funktion zum überwachen des Arbeitsspeichers
 def monitor_memory():
     memory = psutil.virtual_memory()
     memory_info = []
+
     memory_info.append("Arbeitsspeicher:")
     memory_info.append(f" Gesamter RAM: {memory.total / (1024**3):.2f} GB")
     memory_info.append(f" Verfügbarer RAM: {memory.available / (1024**3):.2f} GB")
     memory_info.append(f" RAM-Auslastung: {memory.percent}%\n")
-    return "\n".join(memory_info)
+
+    #Warnung bei zu Hohem RAM verbrauch
+    if memory.percent >=CRITICAL_MEMORY_THRESHOLD:
+        warning_message = f"!!! WARNUNG: RAM-Auslastung hat{CRITICAL_MEMORY_THRESHOLD}% überschritten ({memory.percent}%) !!!"
+        memory_info.append(warning_message)
+        print(warning_message) #Gib die Warnung in der Konsole aus 
+        return "\n".join(memory_info), warning_message #Rückgabe der RAM INFO und der Warnung 
+    
+    return "\n".join(memory_info), None #Keine Warung, nur Memory Daten zurückgeben
 
 #Funktion zum Überachen der Festplatte
 def monitor_disk():
@@ -52,7 +63,7 @@ def monitor_network():
     net_info.append(f" Empfange Daten: {net_io.bytes_recv / (1024**2):.2f} MF\n")
     return "\n".join(net_info)
 
-#Hauptüberwachungsfunktion mit eingabe in eine Datei
+#Hauptüberwachungsfunktion mit eingabe(&Warnungen) in eine Datei
 def monitor_system():
     #Anzahl der Überwachungszyklen
     max_interations = 5 #nur 5 Durchläufe, dann stoppen 
@@ -62,8 +73,24 @@ def monitor_system():
       while current_interation < max_interations:
         file.write("_" * 40+"\n")
         file.write(time.strftime("%Y-%m-%d %H:%M:%S") + "\n" ) #aktuelle Zeit wird hinzugefügt
-        file.write(monitor_cpu()[0])
-        file.write(monitor_memory())
+
+        #Überwache CPU und speichere evtl.Warnung 
+        cpu_data, cpu_warning = monitor_cpu()
+        file.write(cpu_data)
+
+        #CPU-Warnung in die Datei schreiben, falls vorhanden
+        if cpu_warning:
+            file.write(cpu_warning + "\n")
+
+        #überwache RAM und speichere evtl.Warnung
+        memory_data, memory_warning = monitor_memory()
+        file.write(memory_data)
+
+        #RAM-Warnung in die Datei schreiben, falls vorhanden
+        if memory_warning:
+            file.write(memory_warning + "\n")
+        
+        #Festplatten sowie Netzwerküberwachung
         file.write(monitor_disk())
         file.write(monitor_network())
         file.write("_" * 40 + "\n\n")
@@ -71,7 +98,7 @@ def monitor_system():
         #iterationszähler erhöhen
         current_interation +=1
 
-        #Wartezeit von 10 Sekunden
+        #Wartezeit von 15 Sekunden
         time.sleep(15)
 
 #Warnsystem hier einfügen
