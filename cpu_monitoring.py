@@ -1,5 +1,5 @@
 import psutil
-import Warnungs_mail 
+import Warnungs_mail as wm
 
 #Schwellenwert definieren
 CRITICAL_CPU_THRESHOLD = 3.0 
@@ -20,7 +20,7 @@ def monitor_cpu():
         warning_message = f"!!! WARNUNG: CPU-Auslastung hat {CRITICAL_CPU_THRESHOLD}% überschritten ({cpu_usage}%) !!!"
         cpu_info.append(warning_message)
         print(warning_message) #Gib die Warnung in der Konsole aus
-        send_email_alert("CPU Warnung", warning_message) #HIER Der MAIL befehl
+        wm.send_email_alert("CPU Warnung", warning_message) #HIER Der MAIL befehl
         return "\n".join(cpu_info), warning_message #Rückgabe der CPU-Information und der Warnung
     
     return "\n".join(cpu_info), None #keine Warunung, nur CPU Daten zurückgeben

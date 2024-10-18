@@ -1,5 +1,5 @@
 import psutil
-
+import Warnungs_mail as wm
 #Schwellenwert definieren
 CRITICAL_MEMORY_THRESHOLD = 80.0
 
@@ -18,7 +18,9 @@ def monitor_memory():
     if memory.percent >=CRITICAL_MEMORY_THRESHOLD:
         warning_message = f"!!! WARNUNG: RAM-Auslastung hat{CRITICAL_MEMORY_THRESHOLD}% überschritten ({memory.percent}%) !!!"
         memory_info.append(warning_message)
+        wm.send_email_alert("RAM-Warnung", warning_message)
         print(warning_message) #Gibt die Warnung in der Konsole aus 
+        
         return "\n".join(memory_info), warning_message #Rückgabe der RAM INFO und der Warnung 
     
     return "\n".join(memory_info), None #Keine Warnung, nur Memory Daten zurückgeben

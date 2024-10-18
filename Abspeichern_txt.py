@@ -24,7 +24,7 @@ def monitor_system():
         #CPU-Warnung in die Datei schreiben, falls vorhanden
         if cpu_warning:
             file.write(cpu_warning + "\n")
-
+        
         #überwache RAM und speichere evtl.Warnung
         memory_data, memory_warning = mm.monitor_memory()
         file.write(memory_data)
@@ -32,6 +32,7 @@ def monitor_system():
         #RAM-Warnung in die Datei schreiben, falls vorhanden
         if memory_warning:
             file.write(memory_warning + "\n")
+           
         
         #überwache Festplatte und speicher evtl.Warnung
         disk_data, disk_warning = dm.monitor_disk()
