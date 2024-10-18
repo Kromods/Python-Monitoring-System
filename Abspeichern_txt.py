@@ -5,6 +5,7 @@ import memory_monitoring as mm
 import disk_monitoring as dm
 import network_monitoring as nm
 
+
 #Hauptüberwachungsfunktion mit eingabe(&Warnungen) in eine Datei
 def monitor_system():
     #Anzahl der Überwachungszyklen
