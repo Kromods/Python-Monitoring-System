@@ -3,9 +3,9 @@ from email.mime.text import MIMEText
 
 #Mail angabe sender und reciver (Empfänger Liste kann auch als Liste erstellt werden)
 def send_email_alert(subject, body):
-    sender_mail = "marten@schokola.de" # Absender adresse hier würde ich meine Firmen Mail nehmen
+    sender_mail = "marten.rosinski@gmail.com" # Absender adresse hier würde ich meine Firmen Mail nehmen
     receiver_mail = "rosinskimarten@gmail.com" # Receiver Mail ( maybe hier die Privatadressen)
-    password = "Monitoring-cpu80" # Hier muss das Passwort der Absender Adresse rein (maybe App specific Passwort)
+    password = "NeuealteFreunde" # Hier muss das Passwort der Absender Adresse rein (maybe App specific Passwort)
     
     #MIME Struktur der Mail
     msg = MIMEText(body)
@@ -15,7 +15,7 @@ def send_email_alert(subject, body):
 
 #Verbindung zum SMTP Server 
     try:
-        server = smtplib.SMTP_SSL('smtp.priv.mcs.de', 465)
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     #    server.starttls() #Sichere VErbindung mit TLS (Transport Layer Security)
         server.connect()
         server.ehlo()

@@ -1,6 +1,6 @@
 import psutil
 
-#Funktion zum Überachen des Netzwerks 
+#Funktion zum Überwachen des Netzwerks 
 def monitor_network():
     net_io = psutil.net_io_counters()
     net_info = []
