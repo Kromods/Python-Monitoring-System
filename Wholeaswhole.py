@@ -176,7 +176,7 @@ def plot_cpu_usage():
         title_font=dict(color='black'),  # Schwarze Schrift für Titel
         font=dict(color='black'),  # Schwarze Schrift für Achsenbeschriftungen
         plot_bgcolor='white',  # Weißer Hintergrund für den Plot
-        paper_bgcolor='white',  # Weißer Papierhintergrund
+        paper_bgcolor='#f0f0f0',  # Weißer Papierhintergrund
         xaxis=dict(showline=True, linecolor='black'),  # Schwarze Achsenlinien
         yaxis=dict(showline=True, linecolor='black')
     )
@@ -194,7 +194,7 @@ def plot_ram_usage():
         title_font=dict(color='black'),  # Schwarze Schrift für Titel
         font=dict(color='black'),  # Schwarze Schrift für Beschriftungen
         plot_bgcolor='white',  # Weißer Hintergrund für den Plot
-        paper_bgcolor='white'  # Weißer Papierhintergrund
+        paper_bgcolor='#f0f0f0'  # Weißer Papierhintergrund
     )
     return fig_ram
 
@@ -210,7 +210,7 @@ def plot_disk_usage():
         title_font=dict(color='black'),  # Schwarze Schrift für Titel
         font=dict(color='black'),  # Schwarze Schrift für Beschriftungen
         plot_bgcolor='white',  # Weißer Hintergrund für den Plot
-        paper_bgcolor='white'  # Weißer Papierhintergrund
+        paper_bgcolor='#f0f0f0'  # Weißer Papierhintergrund
     )
     return fig_disk
 
@@ -228,7 +228,7 @@ def plot_network_usage():
         title_font=dict(color='black'),  # Schwarze Schrift für Titel
         font=dict(color='black'),  # Schwarze Schrift für Achsenbeschriftungen
         plot_bgcolor='white',  # Weißer Hintergrund für den Plot
-        paper_bgcolor='white',  # Weißer Papierhintergrund
+        paper_bgcolor='#f0f0f0',  # Weißer Papierhintergrund
         xaxis=dict(showline=True, linecolor='black'),  # Schwarze Achsenlinien
         yaxis=dict(showline=True, linecolor='black')
     )

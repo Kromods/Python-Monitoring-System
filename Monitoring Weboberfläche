@@ -17,7 +17,7 @@
         iframe {
             display: block;
             margin: 0 auto;
-            border: 2px solid #fefdff;
+            border: 2px solid #f0f0f0;
             margin-bottom: 40px;
         }
     </style>
