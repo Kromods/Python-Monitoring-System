@@ -164,75 +164,109 @@ def monitor_system():
         time.sleep(15)
         
 
-#Grafiken erstellen aus Datei Grafiken.py
- # 1.CPU-Auslastung pro Kern
+ # CPU-Nutzungsdiagramm
 def plot_cpu_usage():
     cpu_usage = psutil.cpu_percent(interval=1, percpu=True)
-    fig_cpu = go.Figure([go.Bar(x=list(range(len(cpu_usage))), y=cpu_usage)])
+    fig_cpu = go.Figure([go.Bar(x=list(range(len(cpu_usage))), y=cpu_usage, marker_color='green')])  # Balken in Grün
     fig_cpu.update_layout(
         title= 'CPU Usage per Core',
         xaxis_title='CPU Core',
         yaxis_title='Usage(%)',
-        template='plotly_dark'
-    )    
+        template='plotly_white',  # Hintergrund Weiß
+        title_font=dict(color='black'),  # Schwarze Schrift für Titel
+        font=dict(color='black'),  # Schwarze Schrift für Achsenbeschriftungen
+        plot_bgcolor='white',  # Weißer Hintergrund für den Plot
+        paper_bgcolor='white',  # Weißer Papierhintergrund
+        xaxis=dict(showline=True, linecolor='black'),  # Schwarze Achsenlinien
+        yaxis=dict(showline=True, linecolor='black')
+    )
     return fig_cpu
 
-#RAM-NutzungsDiagramm
+# RAM-Nutzungsdiagramm
 def plot_ram_usage():
     ram = psutil.virtual_memory()
     labels = ['Used', 'Availible']
-    values = [ram.used / (1024**3), ram.available / (1024**3)] # in GB
-    fig_ram = go.Figure([go.Pie(labels=labels, values=values, hole=0.3)])
+    values = [ram.used / (1024**3), ram.available / (1024**3)]  # in GB
+    fig_ram = go.Figure([go.Pie(labels=labels, values=values, hole=0.3, marker_colors=['green', 'blue'])])  # Grün & Blau
     fig_ram.update_layout(
         title='RAM Usage (GB)',
-        template='plotly_dark'
+        template='plotly_white',  # Hintergrund Weiß
+        title_font=dict(color='black'),  # Schwarze Schrift für Titel
+        font=dict(color='black'),  # Schwarze Schrift für Beschriftungen
+        plot_bgcolor='white',  # Weißer Hintergrund für den Plot
+        paper_bgcolor='white'  # Weißer Papierhintergrund
     )
-    return fig_ram    
+    return fig_ram
 
-#FestplattenDiagramm
+# Festplattennutzungsdiagramm
 def plot_disk_usage():
     disk = psutil.disk_usage('/')
     labels = ['Used', 'Free']
-    values = [disk.used / (1024**3), disk.free / (1024**3)] #in GB
-    fig_disk = go.Figure([go.Pie(labels=labels, values=values, hole=0.3)])
+    values = [disk.used / (1024**3), disk.free / (1024**3)]  # in GB
+    fig_disk = go.Figure([go.Pie(labels=labels, values=values, hole=0.3, marker_colors=['green', 'blue'])])  # Grün & Blau
     fig_disk.update_layout(
         title='Disk Usage (GB)',
-        template='plotly_dark'
-    ) 
-    return fig_disk   
+        template='plotly_white',  # Hintergrund Weiß
+        title_font=dict(color='black'),  # Schwarze Schrift für Titel
+        font=dict(color='black'),  # Schwarze Schrift für Beschriftungen
+        plot_bgcolor='white',  # Weißer Hintergrund für den Plot
+        paper_bgcolor='white'  # Weißer Papierhintergrund
+    )
+    return fig_disk
 
-#Netzwerkdiagramm
+# Netzwerkdiagramm
 def plot_network_usage():
     net_io = psutil.net_io_counters()
     labels = ['Bytes Sent', 'Bytes received']
-    values = [net_io.bytes_sent / (1024**2), net_io.bytes_recv / (1024**2)] #in MB
-    fig_net = go.Figure([go.Bar(x=labels, y=values)])
+    values = [net_io.bytes_sent / (1024**2), net_io.bytes_recv / (1024**2)]  # in MB
+    fig_net = go.Figure([go.Bar(x=labels, y=values, marker_color=['green', 'blue'])])  # Balken in Grün & Blau
     fig_net.update_layout(
         title='Network Usage (MB)',
         xaxis_title='Network Activity',
         yaxis_title='Data(MB)',
-        template='plotly_dark'
+        template='plotly_white',  # Hintergrund Weiß
+        title_font=dict(color='black'),  # Schwarze Schrift für Titel
+        font=dict(color='black'),  # Schwarze Schrift für Achsenbeschriftungen
+        plot_bgcolor='white',  # Weißer Hintergrund für den Plot
+        paper_bgcolor='white',  # Weißer Papierhintergrund
+        xaxis=dict(showline=True, linecolor='black'),  # Schwarze Achsenlinien
+        yaxis=dict(showline=True, linecolor='black')
     )
     return fig_net
 
-#Funktion zum Anzeigen aller Diagramme
+import os
+
+# Funktion zum Speichern der Plots in einem bestimmten Ordner
+def save_plots_to_folder(fig, filename, folder='Python Monitoring System'):
+    # Prüfe, ob der Ordner existiert, andernfalls erstelle ihn
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    
+    # Erstelle den vollständigen Pfad (Ordner + Dateiname)
+    filepath = os.path.join(folder, filename)
+    
+    # Speichere das Diagramm als HTML-Datei
+    fig.write_html(filepath)
+    #print(f"Diagramm gespeichert unter: {filepath}") (kommentiert da Terminal ausgabe)
+
+# Funktion zum Anzeigen aller Diagramme
 def show_all_plots():
     fig_cpu = plot_cpu_usage()
     fig_ram = plot_ram_usage()
     fig_disk = plot_disk_usage()
     fig_net = plot_network_usage()
     
-    #Einzelne Diagramme anzeigen
-    fig_cpu.show()
-    fig_ram.show()
-    fig_disk.show()
-    fig_net.show()
+    # Einzelne Diagramme anzeigen (rausgenommen da diese sich immer im browser geöffnet haben)
+   # fig_cpu.show()
+   # fig_ram.show()
+   # fig_disk.show()
+   # fig_net.show()
     
-    #Optional: Diagramme als HTML speichern
-    fig_cpu.write_html("cpu_usage_plot.html")
-    fig_ram.write_html("ram_usage_plot.html")
-    fig_disk.write_html("disk_usage_plot.html")
-    fig_net.write_html("network_usage_plot.html")
+    # Speichere die Diagramme als HTML in dem spezifischen Ordner
+    save_plots_to_folder(fig_cpu, "cpu_usage_plot.html")
+    save_plots_to_folder(fig_ram, "ram_usage_plot.html")
+    save_plots_to_folder(fig_disk, "disk_usage_plot.html")
+    save_plots_to_folder(fig_net, "network_usage_plot.html")
     
 
 #Start
