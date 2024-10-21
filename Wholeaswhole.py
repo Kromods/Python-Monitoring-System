@@ -120,10 +120,10 @@ def send_email_alert(subject, body):
 #Hauptüberwachungsfunktion mit eingabe(&Warnungen) in eine Datei
 def monitor_system():
     #Anzahl der Überwachungszyklen
-    max_interations = 5 #nur 5 Durchläufe, dann stoppen 
+    max_interations = 1 #nur 5 Durchläufe, dann stoppen 
     current_interation = 0 
 
-    with open("monitoring_results.txt", "a") as file:
+    with open("monitoring_results.txt", "w") as file:
       while current_interation < max_interations:
         file.write("_" * 40+"\n")
         file.write(time.strftime("%Y-%m-%d %H:%M:%S") + "\n" ) #aktuelle Zeit wird hinzugefügt
@@ -234,9 +234,8 @@ def show_all_plots():
     fig_disk.write_html("disk_usage_plot.html")
     fig_net.write_html("network_usage_plot.html")
     
-if __name__ == '__main__':
-    show_all_plots
 
-#Überwachung starten
+#Start
 if __name__ == "__main__":
-    monitor_system()
+    monitor_system() #monitor system starten
+    show_all_plots() #Diagramme zeigen und abspeichern
